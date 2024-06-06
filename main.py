@@ -131,7 +131,7 @@ class MyModel(LightningModule):
                     f.write(str(self))
                     f.write('\n\n\n')
                 # measure the model FLOPs
-                write_FLOPs(model=self, save_dir=self.logger.log_dir, num_chns=8, fs=16000, audio_time_len=4, model_import_path='boring.MyModel')
+                write_FLOPs(model=self, save_dir=self.logger.log_dir, num_chns=8, fs=16000, audio_time_len=4, model_import_path='main.MyModel')
 
     def training_step(self, batch: Tensor, batch_idx: int):
         """如何使用一个mini-batch的数据得到train/loss。其他step同理。
