@@ -148,7 +148,7 @@ class MyModel(LightningModule):
         else:
             loss = preds.sum()
 
-        self.log("train/loss", loss)
+        self.log("train/loss", loss, on_epoch=True, prog_bar=True)
         return loss
 
     def validation_step(self, batch: Tensor, batch_idx: int):
@@ -159,7 +159,7 @@ class MyModel(LightningModule):
 
         preds = self.forward(batch)
         loss = preds.sum()
-        self.log("val/loss", loss, sync_dist=True)  # 设置sync_dist=True，使得val/loss在多卡训练的时候能够同步，用于选择最佳的checkpoint等任务。train/loss不需要设置这个，因为训练步需要同步的是梯度，而不是指标，梯度会自动同步
+        self.log("val/loss", loss, on_epoch=True, prog_bar=True, sync_dist=True)  # 设置sync_dist=True，使得val/loss在多卡训练的时候能够同步，用于选择最佳的checkpoint等任务。train/loss不需要设置这个，因为训练步需要同步的是梯度，而不是指标，梯度会自动同步
 
         if self.trainer.precision == '16-mixed' or self.trainer.precision == 'bf16-mixed':
             autocast.__exit__(None, None, None)  # 关闭32精度
@@ -172,7 +172,7 @@ class MyModel(LightningModule):
 
         preds = self.forward(batch)
         loss = preds.sum()
-        self.log("test/loss", loss)
+        self.log("test/loss", loss, on_epoch=True, prog_bar=True)
 
         if self.trainer.precision == '16-mixed' or self.trainer.precision == 'bf16-mixed':
             autocast.__exit__(None, None, None)  # 关闭32精度
